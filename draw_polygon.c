@@ -11,8 +11,7 @@
 * /System/Library/Frameworks/OpenGL.framework/Libraries
 * -------------------------------------------------------------------------------- 
 * How to compile
-* g++ -o draw_point draw_point.c -framework GLUT -framework OpenGL 
-*
+* g++ -o draw_polygon draw_polygon.c -framework GLUT -framework OpenGL 
 */
 
 void drawPolygon(void){
