@@ -11,7 +11,7 @@
 * Graphic Card: NVIDIA GeForce GT 650M 1024 MB
 * --------------------------------------------------------------------------------
 * Compile:
-* g++ -o main main.cpp -framework GLUT -framework OpenGL -framework Cocoa
+* g++ -o cube cube.cpp -I /opt/X11/include/GL/glext.h -framework GLUT -framework OpenGL -framework Cocoa
 */
 
 #ifdef __APPLE__
@@ -37,7 +37,6 @@ void timerCB(int millisec);
 void initGL();
 int  initGLUT(int argc, char **argv);
 bool initSharedMem();
-void clearSharedMem();
 void initLights();
 void setCamera(float posX, float posY, float posZ, float targetX, float targetY, float targetZ);
 void toPerspective();
@@ -255,8 +254,6 @@ void initGL() {
 
     // enable /disable features
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-    //glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
@@ -282,24 +279,12 @@ void initGL() {
 bool initSharedMem() {
     screenWidth = SCREEN_WIDTH;
     screenHeight = SCREEN_HEIGHT;
-
-
     cameraAngleX = cameraAngleY = 0.0f;
     cameraDistance = CAMERA_DISTANCE;
-
     maxVertices = maxIndices = 0;
 
     return true;
 }
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-// clean up global vars
-///////////////////////////////////////////////////////////////////////////////
-void clearSharedMem() {
-}
-
 
 
 ///////////////////////////////////////////////////////////////////////////////

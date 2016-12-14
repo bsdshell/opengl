@@ -10,8 +10,10 @@
 * OS EL Capitan 10.11.4 (15E65)
 * Graphic Card: NVIDIA GeForce GT 650M 1024 MB
 * --------------------------------------------------------------------------------
+* glext.h is not in GLUT path on MacOSX 
 * Compile:
-* g++ -o main main.cpp -framework GLUT -framework OpenGL -framework Cocoa
+* g++ -o trymain trymain.cpp -I /opt/X11/include/GL/glext.h -framework GLUT -framework OpenGL -framework Cocoa
+
 */
 
 #ifdef __APPLE__
@@ -20,7 +22,7 @@
 #include <GL/glut.h>
 #endif
 
-#include "glext.h"
+//#include "glext.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
