@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <GLUT/glut.h>
+#include "BezierCurve.h"
 
 #define W 600
 #define H 600
@@ -55,28 +56,42 @@ void draw_bezier_v() {
 }
 
 void bezier_points_v() {
-    GLdouble p0[3] = {0.0f, 0.0f, 1.0f};
-    GLdouble p1[3] = {0.0f, 1.0f, 0.0f};
-    GLdouble p2[3] = {0.0f, 0.0f, -1.0f};
+//    GLdouble p0[3] = {0.0f, 0.0f, 1.0f};
+//    GLdouble p1[3] = {0.0f, 1.0f, 0.0f};
+//    GLdouble p2[3] = {0.0f, 0.0f, -1.0f};
+//
+//
+//    int max_size = 20;
+//    int kp = 0;
+//    int level = 4;
+//
+//    bezier_curve(p0, p1, p2, midv, &kp, level);
 
-    int max_size = 20;
-    int kp = 0;
-    int level = 4;
-
-    bezier_curve(p0, p1, p2, midv, &kp, level);
+    Vector3 v0(0.0f, 0.0f, 1.0f);
+    Vector3 v1(0.0f, 1.0f, 0.0f);
+    Vector3 v2(0.0f, 0.0f, -1.0f);
+    DDLinkedList<Vector3>* ddl = new DDLinkedList<Vector3>();
+    int level = 2;
+    beziercurve(v0, v1, v2, ddl, level);
 
 }
 void bezier_points_u() {
-    GLdouble p0[3] = {-1.0f, 0.0f, 0.0f};
-    GLdouble p1[3] = {0.0f, 1.0f, 0.0f};
-    GLdouble p2[3] = {1.0f, 0.0f, 0.0f};
+//    GLdouble p0[3] = {-1.0f, 0.0f, 0.0f};
+//    GLdouble p1[3] = {0.0f, 1.0f, 0.0f};
+//    GLdouble p2[3] = {1.0f, 0.0f, 0.0f};
+//
+//    int max_size = 20;
+//    int kp = 0;
+//    int level = 4;
+//
+//    bezier_curve(p0, p1, p2, midu, &kp, level);
 
-    int max_size = 20;
-    int kp = 0;
-    int level = 4;
-
-    bezier_curve(p0, p1, p2, midu, &kp, level);
-
+    Vector3 v0(-1.0f, 0.0f, 1.0f);
+    Vector3 v1(0.0f, 1.0f, 0.0f);
+    Vector3 v2(1.0f, 0.0f, 0.0f);
+    DDLinkedList<Vector3>* ddl = new DDLinkedList<Vector3>();
+    int level = 2;
+    beziercurve(v0, v1, v2, ddl, level);
 }
 //--------------------------------------------------------------------------------
 
