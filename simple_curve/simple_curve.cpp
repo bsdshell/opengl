@@ -11,7 +11,8 @@
 #include <cmath>
 
 #include "BezierCurve.h"
-#include "Utility.h"
+#include "Curve.h"
+#include "Torus.h"
 
 // Colors
 GLfloat WHITE[] = {1, 1, 1};
@@ -93,9 +94,14 @@ public:
     }
 };
 
+
 // Global variables: a camera, a checkerboard and some balls.
 Checkerboard checkerboard(8, 8);
 Camera camera;
+
+Curve* c = new Curve();
+Torus torus(1, 1, 1, 8, 25);
+Torus torus2(20, 40);
 
 // Application-specific initialization: Set up global lighting parameters
 // and create display lists.
@@ -110,7 +116,6 @@ void init() {
     checkerboard.create();
 }
 
-
 // Draws one frame, the checkerboard then the balls, from the current camera
 // position.
 void display() {
@@ -120,6 +125,11 @@ void display() {
               checkerboard.centerx(), 0.0, checkerboard.centerz(),
               0.0, 1.0, 0.0);
     checkerboard.draw();
+    c->draw();
+    //torus(8, 25);
+    torus.draw();
+    torus2.draw();
+    
     glFlush();
     glutSwapBuffers();
 }
