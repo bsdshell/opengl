@@ -1,2 +1,6 @@
 #!/bin/bash
-gcc -o beziercurve beziercurve.cpp -framework GLUT -framework OpenGL -framework Cocoa
+echo "run OpenGL"
+
+#g++ -v -o  draw_point draw_point.cpp -I/Users/cat/myfile/github/cpp/MyLib -framework GLUT -framework OpenGL 
+
+g++ -v -o drawline drawline.cpp -I/Users/cat/myfile/github/cpp/MyLib -framework GLUT -framework OpenGL
