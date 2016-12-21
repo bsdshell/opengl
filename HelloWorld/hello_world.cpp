@@ -7,6 +7,7 @@
 
 GLuint theTorus;
 
+
 /* Draw a torus */
 static void torus(int numc, int numt) {
     int i, j, k;

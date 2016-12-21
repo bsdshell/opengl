@@ -1,4 +1,4 @@
-// This application shows balls bouncing on a checkerboard, with no respect
+// This application shows balls bouncing on a CheckerBoard, with no respect
 // for the laws of Newtonian Mechanics.  There's a little spotlight to make
 // the animation interesting, and arrow keys move the camera for even more
 // fun.
@@ -13,15 +13,16 @@
 #include "BezierCurve.h"
 #include "Curve.h"
 #include "Torus.h"
-#include "CheckBoard.h"
+#include "CheckerBoard.h"
 #include "Circle.h"
 #include "Cylinder.h"
 #include "DrawQuad.h"
 #include "Coordinate.h"
+#include "Color.h" 
 
 // Colors
-GLfloat WHITE[] = {1, 1, 1};
 GLfloat RED[] = {1, 0, 0};
+GLfloat WHITE[] = {1, 1, 1};
 GLfloat GREEN[] = {0, 1, 0};
 GLfloat MAGENTA[] = {1, 0, 1};
 
@@ -57,7 +58,7 @@ public:
     }
 };
 
-// A checkerboard class.  A checkerboard has alternating red and white
+// A CheckerBoard class.  A CheckerBoard has alternating red and white
 // squares.  The number of squares is set in the constructor.  Each square
 // is 1 x 1.  One corner of the board is (0, 0) and the board stretches out
 // along positive x and positive z.  It rests on the xz plane.  I put a
@@ -100,8 +101,8 @@ public:
 //};
 //
 //
-// Global variables: a camera, a checkerboard and some balls.
-Checkerboard checkerboard(8, 8);
+// Global variables: a camera, a CheckerBoard and some balls.
+CheckerBoard checker_board(9, 9);
 Camera camera;
 
 Curve* c = new Curve();
@@ -110,34 +111,42 @@ Torus torus2(20, 40);
 Circle circle(1, 1, 1, 20);
 Cylinder cylinder(1, 1, 0.2, 20);
 DrawQuad draw_quad;
-Coordinate co;
+Coordinate co(8);
 
 // Application-specific initialization: Set up global lighting parameters
 // and create display lists.
 void init() {
     glEnable(GL_DEPTH_TEST);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, WHITE);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, RED);
     glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
     glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);
     glMaterialf(GL_FRONT, GL_SHININESS, 30);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    checkerboard.create();
+    checker_board.setColor(GREEN, WHITE);
+    checker_board.create();
 }
 
-// Draws one frame, the checkerboard then the balls, from the current camera
+// Draws one frame, the CheckerBoard then the balls, from the current camera
 // position.
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     gluLookAt(camera.getX(), camera.getY(), camera.getZ(),
-              checkerboard.centerx(), 0.0, checkerboard.centerz(),
+              0.0, 0.0, 0.0,
               0.0, 1.0, 0.0);
-    checkerboard.draw();
+//    gluLookAt(camera.getX(), camera.getY(), camera.getZ(),
+//              checker_board.centerx(), 0.0, checker_board.centerz(),
+//              0.0, 1.0, 0.0);
+    checker_board.draw();
     c->draw();
     //torus(8, 25);
 //    torus.draw();
-//    torus2.draw();
+    torus2.draw();
+    //glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+
     //circle.draw();
 //    glTranslatef(0.0, 0.0, -1.0);
 //    glRotatef(60, 1.0, 0.0, 0.0);
