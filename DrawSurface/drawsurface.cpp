@@ -18,8 +18,9 @@
 #include "Cylinder.h"
 #include "DrawQuad.h"
 #include "Coordinate.h"
-#include "Color.h" 
-#include "Const.h" 
+#include "Color.h"
+#include "Const.h"
+#include "BezierSurfaceBatch.h"
 
 // A camera.  It moves horizontally in a circle centered at the origin of
 // radius 10.  It moves vertically straight up and down.
@@ -86,11 +87,103 @@ Cylinder cylinder(1, 1, 0.2, 20);
 DrawQuad draw_quad;
 Coordinate co(8);
 
+GLfloat xx = 1.0;
+GLfloat yy = 1.0;
+GLfloat zz = 1.0;
 
-void initCurve(){
-    for(int i=0; i<4; i++){
+GLfloat myarr[4][4][3] = {
+    {
+        {0.0, 0.0, 0.0f},
+        {1.0, 1.0, 0.0f},
+        {2.0, 1.0, 0.0f},
+        {3.0, 0.0, 0.0f}
+    },
+    {
+        {0.0, 0.0, 0.0f + xx},
+        {1.0, 5.0, 0.0f + xx},
+        {2.0, 5.0, 0.0f + xx},
+        {3.0, 0.0, 0.0f + xx}
+    },
+    {
+        {0.0, 0.0, 0.0f + 2*xx},
+        {1.0, -3.0, 0.0f + 2*xx},
+        {2.0, -2.0, 0.0f + 2*xx},
+        {3.0, 0.0, 0.0f + 2*xx}
+    },
+    {
+        {0.0, 0.0, 0.0f + 3*xx},
+        {1.0, 1.0, 0.0f + 3*xx},
+        {2.0, 1.0, 0.0f + 3*xx},
+        {3.0, 0.0, 0.0f + 3*xx}
+    }
+};
+
+//class BezierSurfaceBatch {
+//    static int const PSIZE = 4;
+//    Vector3 arr[PSIZE][PSIZE];
+//    Curve* cListu[PSIZE];
+//    Curve** cListv = NULL;
+//    int nCurve = 0;
+//
+//    public:
+//    BezierSurfaceBatch(GLfloat arrf[PSIZE][PSIZE][3]) {
+//        for(int i=0; i<PSIZE; i++) {
+//            for(int j=0; j<PSIZE; j++) {
+//                arr[i][j] = Vector3(arrf[i][j]);
+//            }
+//        }
+//    }
+//    void create() {
+//        Node<Vector3>* curr[PSIZE];
+//        for(int i=0; i<PSIZE; i++) {
+//            cListu[i] = new Curve(arr[i][0], arr[i][1], arr[i][2], arr[i][3]);
+//            curr[i] = cListu[i]->ddl->head;
+//        }
+//
+//        nCurve = cListu[0]->ddl->count();
+//        int k = 0;
+//        cListv = new Curve*[nCurve];
+//        while(k < nCurve) {
+//            cListv[k] = new Curve(curr[0]->data, curr[1]->data, curr[2]->data, curr[3]->data);
+//            for(int i=0; i<PSIZE; i++) {
+//                curr[i] = curr[i]->next;
+//            }
+//            k++;
+//        }
+//    }
+//    void draw() {
+//        // initial four control points in u direction
+//        // u direction
+//        for(int i=0; i<PSIZE; i++) {
+//            cListu[i]->setColor(curveColor2);
+//            cListu[i]->draw();
+//        }
+//        // each four control points for each bezier curve in v direction
+//        for(int i=0; i<nCurve; i++) {
+//            cListv[i]->setColor(curveColor1);
+//            cListv[i]->draw();
+//        }
+//    }
+//    ~BezierSurfaceBatch() {
+//        for(int i=0; i<PSIZE; i++) {
+//            delete cListu[i];
+//        }
+//
+//        for(int i=0; i<nCurve; i++) {
+//            delete cListv[i];
+//        }
+//        if(cListv)
+//            delete cListv;
+//        cListv = NULL;
+//    }
+//};
+//
+BezierSurfaceBatch bezier(myarr);
+
+void initCurve() {
+    for(int i=0; i<4; i++) {
         ddl_arr[i] = new DDLinkedList<Vector3>();
-    } 
+    }
 
     Vector3 p0(-1, 0, 0);
     Vector3 p1(0, 1, 0);
@@ -101,7 +194,7 @@ void initCurve(){
     ddl_arr[0] = curveListu[0]->ddl;
 
     Vector3 p4(-1, 0, 0.5);
-    Vector3 p5(0, 1 + 2, 0.5);
+    Vector3 p5(0, -1, 0.5);
     Vector3 p6(1, 1 + 2, 0.5);
     Vector3 p7(2, 0, 0.5);
     curveListu[1] = new Curve(p4, p5, p6, p7);
@@ -123,11 +216,11 @@ void initCurve(){
     curveListu[3] = new Curve(p12, p13, p14, p15);
     curveListu[3]->setColor(curveColor3);
     ddl_arr[3] = curveListu[3]->ddl;
-    
-    for(int i=0; i<4; i++){
+
+    for(int i=0; i<4; i++) {
         pp(ddl_arr[i]->count());
         curveListu[i]->draw();
-    } 
+    }
 
     Node<Vector3>* curr0 = ddl_arr[0]->head;
     Node<Vector3>* curr1 = ddl_arr[1]->head;
@@ -136,7 +229,7 @@ void initCurve(){
 
     // take first 4 curves only
     int k=0;
-    while(k < 21){ 
+    while(k < 21) {
         curveListv[k] = new Curve(curr0->data, curr1->data, curr2->data, curr3->data);
         curveListv[k]->draw();
         curr0 = curr0->next;
@@ -145,15 +238,15 @@ void initCurve(){
         curr3 = curr3->next;
         k++;
     }
-        
-    for(int i=0; i<21; i++){
+
+    for(int i=0; i<21; i++) {
         currArr[i] = curveListv[i]->ddl->head;
-    } 
+    }
 
     int count = 0;
-    while(count < curveListv[0]->ddl->count()){
+    while(count < curveListv[0]->ddl->count()) {
         glBegin(GL_LINE_STRIP); //starts drawing of points
-        for(int i=0; i<21; i++){
+        for(int i=0; i<21; i++) {
             glColor3f(1.0, 1.0, 1.0);
             glVertex3f(currArr[i]->data.v[0], currArr[i]->data.v[1], currArr[i]->data.v[2]);
             currArr[i] = currArr[i]->next;
@@ -166,6 +259,7 @@ void initCurve(){
 // Application-specific initialization: Set up global lighting parameters
 // and create display lists.
 void init() {
+    bezier.create();
     glEnable(GL_DEPTH_TEST);
 //    glLightfv(GL_LIGHT0, GL_DIFFUSE, RED);
 //    glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
@@ -192,7 +286,8 @@ void display() {
 //    draw_quad.draw();
 //    co.draw();
 
-    initCurve();
+//    initCurve();
+    bezier.draw();
     glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
 
     glFlush();
