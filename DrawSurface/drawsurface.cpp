@@ -49,7 +49,8 @@ public:
         y += dy;
     }
     void moveDown() {
-        if (y > dy) y -= dy;
+        //if (y > dy) y -= dy;
+        y -= dy;
     }
 };
 
@@ -57,6 +58,10 @@ public:
 CheckerBoard checker_board(9, 9);
 Camera camera;
 
+DDLinkedList<Vector3>* ddl_arr[4];
+Curve* curveListu[4];
+Curve* curveListv[50];
+Node<Vector3>* currArr[500];
 
 Vector3 p0(-1, 0, 0);
 Vector3 p1(0, 1, 0);
@@ -69,6 +74,10 @@ Vector3 p22(1, 1, 0);
 Vector3 p33(2, 0, 0);
 
 Curve* curve4 = new Curve(p00, p11, p22, p33);
+GLfloat curveColor0[3] = {1.0, 0.0, 0.0};
+GLfloat curveColor1[3] = {0.0, 1.0, 0.0};
+GLfloat curveColor2[3] = {0.0, 0.0, 1.0};
+GLfloat curveColor3[3] = {1.0, 1.0, 0.0};
 
 Torus torus(1, 1, 1, 8, 25);
 Torus torus2(20, 40);
@@ -77,18 +86,95 @@ Cylinder cylinder(1, 1, 0.2, 20);
 DrawQuad draw_quad;
 Coordinate co(8);
 
+
+void initCurve(){
+    for(int i=0; i<4; i++){
+        ddl_arr[i] = new DDLinkedList<Vector3>();
+    } 
+
+    Vector3 p0(-1, 0, 0);
+    Vector3 p1(0, 1, 0);
+    Vector3 p2(1, 1, 0);
+    Vector3 p3(2, 0, 0);
+    curveListu[0] = new Curve(p0, p1, p2, p3);
+    curveListu[0]->setColor(curveColor0);
+    ddl_arr[0] = curveListu[0]->ddl;
+
+    Vector3 p4(-1, 0, 0.5);
+    Vector3 p5(0, 1 + 2, 0.5);
+    Vector3 p6(1, 1 + 2, 0.5);
+    Vector3 p7(2, 0, 0.5);
+    curveListu[1] = new Curve(p4, p5, p6, p7);
+    curveListu[1]->setColor(curveColor1);
+    ddl_arr[1] = curveListu[1]->ddl;
+
+    Vector3 p8(-1, 0, 1.0);
+    Vector3 p9(0, 1 + 2, 1.0);
+    Vector3 p10(1, -1 , 1.0);
+    Vector3 p11(2, 0, 1.0);
+    curveListu[2] = new Curve(p8, p9, p10, p11);
+    curveListu[2]->setColor(curveColor2);
+    ddl_arr[2] = curveListu[2]->ddl;
+
+    Vector3 p12(-1, 0, 1.5);
+    Vector3 p13(0, 1, 1.5);
+    Vector3 p14(1, 1, 1.5);
+    Vector3 p15(2, 0, 1.5);
+    curveListu[3] = new Curve(p12, p13, p14, p15);
+    curveListu[3]->setColor(curveColor3);
+    ddl_arr[3] = curveListu[3]->ddl;
+    
+    for(int i=0; i<4; i++){
+        pp(ddl_arr[i]->count());
+        curveListu[i]->draw();
+    } 
+
+    Node<Vector3>* curr0 = ddl_arr[0]->head;
+    Node<Vector3>* curr1 = ddl_arr[1]->head;
+    Node<Vector3>* curr2 = ddl_arr[2]->head;
+    Node<Vector3>* curr3 = ddl_arr[3]->head;
+
+    // take first 4 curves only
+    int k=0;
+    while(k < 21){ 
+        curveListv[k] = new Curve(curr0->data, curr1->data, curr2->data, curr3->data);
+        curveListv[k]->draw();
+        curr0 = curr0->next;
+        curr1 = curr1->next;
+        curr2 = curr2->next;
+        curr3 = curr3->next;
+        k++;
+    }
+        
+    for(int i=0; i<21; i++){
+        currArr[i] = curveListv[i]->ddl->head;
+    } 
+
+    int count = 0;
+    while(count < curveListv[0]->ddl->count()){
+        glBegin(GL_LINE_STRIP); //starts drawing of points
+        for(int i=0; i<21; i++){
+            glColor3f(1.0, 1.0, 1.0);
+            glVertex3f(currArr[i]->data.v[0], currArr[i]->data.v[1], currArr[i]->data.v[2]);
+            currArr[i] = currArr[i]->next;
+        }
+        count++;
+        glEnd();
+    }
+}
+
 // Application-specific initialization: Set up global lighting parameters
 // and create display lists.
 void init() {
     glEnable(GL_DEPTH_TEST);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, RED);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);
-    glMaterialf(GL_FRONT, GL_SHININESS, 30);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    checker_board.setColor(GREEN, WHITE);
-    checker_board.create();
+//    glLightfv(GL_LIGHT0, GL_DIFFUSE, RED);
+//    glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
+//    glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);
+//    glMaterialf(GL_FRONT, GL_SHININESS, 30);
+//    glEnable(GL_LIGHTING);
+//    glEnable(GL_LIGHT0);
+//    checker_board.setColor(GREEN, WHITE);
+//    checker_board.create();
 }
 
 // Draws one frame, the CheckerBoard then the balls, from the current camera
@@ -99,12 +185,14 @@ void display() {
     gluLookAt(camera.getX(), camera.getY(), camera.getZ(),
               0.0, 0.0, 0.0,
               0.0, 1.0, 0.0);
-    checker_board.draw();
+    //checker_board.draw();
     //curve->draw();
-    curve4->draw();
+    //curve4->draw();
 //    torus2.draw();
 //    draw_quad.draw();
 //    co.draw();
+
+    initCurve();
     glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
 
     glFlush();
@@ -148,6 +236,7 @@ void special(int key, int, int) {
 
 // Initializes GLUT and enters the main loop.
 int main(int argc, char** argv) {
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(80, 80);
