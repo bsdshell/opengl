@@ -13,12 +13,12 @@
 #include "BezierCurve.h"
 #include "Curve.h"
 #include "Torus.h"
-#include "CheckerBoard.h"
 #include "Circle.h"
 #include "Cylinder.h"
 #include "DrawQuad.h"
 #include "Coordinate.h"
 #include "Color.h" 
+#include "Parabola.h" 
 
 // Colors
 GLfloat RED[] = {1, 0, 0};
@@ -61,10 +61,82 @@ public:
 };
 
 // Global variables: a camera, a CheckerBoard and some balls.
-CheckerBoard checker_board(9, 9);
 Camera camera;
 
-void draw(void){
+//class Parabola{
+//    public:
+//    GLfloat WHITE[3]   = {1, 1, 1};
+//    GLfloat RED[3]     = {1, 0, 0};
+//    GLfloat GREEN[3]   = {0, 1, 0};
+//    GLfloat MAGENTA[3] = {1, 0, 1};
+//
+//    GLfloat x0 = 0.0;
+//    GLfloat y0 = 0.0;
+//    GLfloat z0 = 0.0;
+//
+//    GLfloat x1 = 0.0;
+//    GLfloat y1 = 0.0;
+//    GLfloat z1 = 0.0;
+//
+//    GLfloat cx = 0.0;
+//    GLfloat cy = 0.0;
+//    GLfloat cz = 0.0;
+//
+//    Parabola(){
+//        cx = 0.0;
+//        cy = 0.0;
+//        cz = 0.0;
+//    }
+//    Parabola(GLfloat cx, GLfloat cy, GLfloat cz){
+//        this->cx = cx;    
+//        this->cy = cy;
+//        this->cz = cz;
+//    }
+//    void init(){
+//        GLfloat lightPosition[] = {0, 2, 0, 1};
+//        glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+//        glNormal3d(0, 1, 0);
+//        glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+//    }
+//    void draw(){
+//        init();
+//
+//        int len = 20;
+//        GLfloat dr = (GLfloat)1/len;
+//        GLfloat delta = (GLfloat)2*M_PI/len;
+//
+//        glBegin(GL_QUAD_STRIP); //starts drawing of points
+//        for(int j=0; j<len; j++){
+//            if(j % 2 == 0)
+//                glColor3f(1.0f,0.0f,0.0f); // point color
+//            else
+//                glColor3f(0.0f,1.0f,0.0f); // point color
+//
+//            GLfloat rq = dr*j;
+//            GLfloat rq1 = dr*(j + 1);
+//            for(int i=0; i<=len; i++){
+//                x0 = rq*sin(delta*i) + cx;
+//                y0 = rq*rq + cy;
+//                z0 = rq*cos(delta*i) + cz; 
+//
+//                x1 = rq1*sin(delta*i) + cx;
+//                y1 = rq1*rq1 + cy;
+//                z1 = rq1*cos(delta*i) + cz; 
+//
+//                glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE,
+//                             (i + j) % 2 == 0 ? GREEN : MAGENTA);
+//                glMaterialf(GL_FRONT, GL_SHININESS, 40);
+//                glVertex3f(x0, y0, z0);
+//                glVertex3f(x1, y1, z1);
+//            } 
+//        } 
+//        glEnd();
+//    }
+//};
+//
+Parabola para;
+
+void draw(GLfloat cx, GLfloat cy, GLfloat cz){
     GLfloat WHITE[3]   = {1, 1, 1};
     GLfloat RED[3]     = {1, 0, 0};
     GLfloat GREEN[3]   = {0, 1, 0};
@@ -82,30 +154,27 @@ void draw(void){
     GLfloat dr = (GLfloat)1/len;
     GLfloat delta = (GLfloat)2*M_PI/len;
 
-    glClear(GL_COLOR_BUFFER_BIT);
-    glPushMatrix();
-
     GLfloat lightPosition[] = {0, 2, 0, 1};
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     glNormal3d(0, 1, 0);
 
+    glBegin(GL_QUAD_STRIP); //starts drawing of points
     for(int j=0; j<len; j++){
         if(j % 2 == 0)
             glColor3f(1.0f,0.0f,0.0f); // point color
         else
             glColor3f(0.0f,1.0f,0.0f); // point color
 
-        glBegin(GL_QUAD_STRIP); //starts drawing of points
         GLfloat rq = dr*j;
         GLfloat rq1 = dr*(j + 1);
         for(int i=0; i<=len; i++){
-            x0 = rq*sin(delta*i);
-            y0 = rq*rq;
-            z0 = rq*cos(delta*i); 
+            x0 = rq*sin(delta*i) + cx;
+            y0 = rq*rq + cy;
+            z0 = rq*cos(delta*i) + cz; 
 
-            x1 = rq1*sin(delta*i);
-            y1 = rq1*rq1;
-            z1 = rq1*cos(delta*i); 
+            x1 = rq1*sin(delta*i) + cx;
+            y1 = rq1*rq1 + cy;
+            z1 = rq1*cos(delta*i) + cz; 
 
             glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE,
                          (i + j) % 2 == 0 ? GREEN : MAGENTA);
@@ -113,12 +182,19 @@ void draw(void){
             glVertex3f(x0, y0, z0);
             glVertex3f(x1, y1, z1);
         } 
-        glEnd();
     } 
-    glPopMatrix();
+    glEnd();
+    glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+}
 
-    glLoadIdentity();
-//    glutSwapBuffers();
+
+
+void draw_test(){
+    glBegin(GL_LINE_LOOP); //starts drawing of points
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(1.0f, 1.0f, 0.0f);
+        glVertex3f(1.0f, 0.0f, 0.0f);
+    glEnd();
 }
 
 // Application-specific initialization: Set up global lighting parameters
@@ -131,8 +207,6 @@ void init() {
     glMaterialf(GL_FRONT, GL_SHININESS, 30);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    checker_board.setColor(GREEN, WHITE);
-    checker_board.create();
 }
 
 // Draws one frame, the CheckerBoard then the balls, from the current camera
@@ -144,7 +218,11 @@ void display() {
               0.0, 0.0, 0.0,
               0.0, 1.0, 0.0);
 
-    draw();
+//    draw(2, 0.0, 0.0);
+//    draw(-2, 0.0, 0.0);
+//    draw_test();
+    para.draw();
+    //draw(2, 0.0, 0.0);
     //glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
 
     glFlush();
@@ -208,6 +286,6 @@ int main(int argc, char** argv) {
     glutReshapeFunc(reshape);
     glutSpecialFunc(special);
     glutTimerFunc(100, timer, 0);
-    init();
+    //init();
     glutMainLoop();
 }

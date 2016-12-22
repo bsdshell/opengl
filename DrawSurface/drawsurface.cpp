@@ -19,12 +19,7 @@
 #include "DrawQuad.h"
 #include "Coordinate.h"
 #include "Color.h" 
-
-// Colors
-GLfloat RED[] = {1, 0, 0};
-GLfloat WHITE[] = {1, 1, 1};
-GLfloat GREEN[] = {0, 1, 0};
-GLfloat MAGENTA[] = {1, 0, 1};
+#include "Const.h" 
 
 // A camera.  It moves horizontally in a circle centered at the origin of
 // radius 10.  It moves vertically straight up and down.
@@ -58,54 +53,23 @@ public:
     }
 };
 
-// A CheckerBoard class.  A CheckerBoard has alternating red and white
-// squares.  The number of squares is set in the constructor.  Each square
-// is 1 x 1.  One corner of the board is (0, 0) and the board stretches out
-// along positive x and positive z.  It rests on the xz plane.  I put a
-// spotlight at (4, 3, 7).
-//class Checkerboard {
-//    int displayListId;
-//    int width;
-//    int depth;
-//public:
-//    Checkerboard(int width, int depth): width(width), depth(depth) {}
-//    double centerx() {
-//        return width / 2;
-//    }
-//    double centerz() {
-//        return depth / 2;
-//    }
-//    void create() {
-//        displayListId = glGenLists(1);
-//        glNewList(displayListId, GL_COMPILE);
-//        GLfloat lightPosition[] = {4, 3, 7, 1};
-//        glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-//        glBegin(GL_QUADS);
-//        glNormal3d(0, 1, 0);
-//        for (int x = 0; x < width - 1; x++) {
-//            for (int z = 0; z < depth - 1; z++) {
-//                glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE,
-//                             (x + z) % 2 == 0 ? RED : WHITE);
-//                glVertex3d(x, 0, z);
-//                glVertex3d(x+1, 0, z);
-//                glVertex3d(x+1, 0, z+1);
-//                glVertex3d(x, 0, z+1);
-//            }
-//        }
-//        glEnd();
-//        glEndList();
-//    }
-//    void draw() {
-//        glCallList(displayListId);
-//    }
-//};
-//
-//
 // Global variables: a camera, a CheckerBoard and some balls.
 CheckerBoard checker_board(9, 9);
 Camera camera;
 
-Curve* c = new Curve();
+
+Vector3 p0(-1, 0, 0);
+Vector3 p1(0, 1, 0);
+Vector3 p2(1, 0, 0);
+Curve* curve = new Curve(p0, p1, p2);
+
+Vector3 p00(-1, 0, 0);
+Vector3 p11(0, 1, 0);
+Vector3 p22(1, 1, 0);
+Vector3 p33(2, 0, 0);
+
+Curve* curve4 = new Curve(p00, p11, p22, p33);
+
 Torus torus(1, 1, 1, 8, 25);
 Torus torus2(20, 40);
 Circle circle(1, 1, 1, 20);
@@ -135,25 +99,12 @@ void display() {
     gluLookAt(camera.getX(), camera.getY(), camera.getZ(),
               0.0, 0.0, 0.0,
               0.0, 1.0, 0.0);
-//    gluLookAt(camera.getX(), camera.getY(), camera.getZ(),
-//              checker_board.centerx(), 0.0, checker_board.centerz(),
-//              0.0, 1.0, 0.0);
     checker_board.draw();
-    c->draw();
-    //torus(8, 25);
-//    torus.draw();
-    torus2.draw();
-    //glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
-
-
-    //circle.draw();
-//    glTranslatef(0.0, 0.0, -1.0);
-//    glRotatef(60, 1.0, 0.0, 0.0);
-//    glRotatef(-20, 0.0, 0.0, 1.0);
-
-    //cylinder.draw();
-    draw_quad.draw();
-    co.draw();
+    //curve->draw();
+    curve4->draw();
+//    torus2.draw();
+//    draw_quad.draw();
+//    co.draw();
     glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
 
     glFlush();
