@@ -29,16 +29,17 @@ class Camera {
     double y;          // the current y position
     double dTheta;     // increment in theta for swinging the camera around
     double dy;         // increment in y for moving the camera up/down
+    double r;
 public:
-    Camera(): theta(-1.2), y(3), dTheta(0.04), dy(0.2) {}
+    Camera(): theta(-1.2), y(3), dTheta(0.04), dy(0.2), r(6){}
     double getX() {
-        return 10 * cos(theta);
+        return r * cos(theta);
     }
     double getY() {
         return y;
     }
     double getZ() {
-        return 10 * sin(theta);
+        return r * sin(theta);
     }
     void moveRight() {
         theta += dTheta;
@@ -52,6 +53,14 @@ public:
     void moveDown() {
         //if (y > dy) y -= dy;
         y -= dy;
+    }
+    void zoomIn() {
+        //if (y > dy) y -= dy;
+        r += -0.2;
+    }
+    void zoomOut() {
+        //if (y > dy) y -= dy;
+        r += 0.2;
     }
 };
 
@@ -90,7 +99,6 @@ Coordinate co(8);
 GLfloat xx = 1.0;
 GLfloat yy = 1.0;
 GLfloat zz = 1.0;
-
 GLfloat myarr[4][4][3] = {
     {
         {0.0, 0.0, 0.0f},
@@ -118,67 +126,37 @@ GLfloat myarr[4][4][3] = {
     }
 };
 
-//class BezierSurfaceBatch {
-//    static int const PSIZE = 4;
-//    Vector3 arr[PSIZE][PSIZE];
-//    Curve* cListu[PSIZE];
-//    Curve** cListv = NULL;
-//    int nCurve = 0;
-//
-//    public:
-//    BezierSurfaceBatch(GLfloat arrf[PSIZE][PSIZE][3]) {
-//        for(int i=0; i<PSIZE; i++) {
-//            for(int j=0; j<PSIZE; j++) {
-//                arr[i][j] = Vector3(arrf[i][j]);
-//            }
-//        }
-//    }
-//    void create() {
-//        Node<Vector3>* curr[PSIZE];
-//        for(int i=0; i<PSIZE; i++) {
-//            cListu[i] = new Curve(arr[i][0], arr[i][1], arr[i][2], arr[i][3]);
-//            curr[i] = cListu[i]->ddl->head;
-//        }
-//
-//        nCurve = cListu[0]->ddl->count();
-//        int k = 0;
-//        cListv = new Curve*[nCurve];
-//        while(k < nCurve) {
-//            cListv[k] = new Curve(curr[0]->data, curr[1]->data, curr[2]->data, curr[3]->data);
-//            for(int i=0; i<PSIZE; i++) {
-//                curr[i] = curr[i]->next;
-//            }
-//            k++;
-//        }
-//    }
-//    void draw() {
-//        // initial four control points in u direction
-//        // u direction
-//        for(int i=0; i<PSIZE; i++) {
-//            cListu[i]->setColor(curveColor2);
-//            cListu[i]->draw();
-//        }
-//        // each four control points for each bezier curve in v direction
-//        for(int i=0; i<nCurve; i++) {
-//            cListv[i]->setColor(curveColor1);
-//            cListv[i]->draw();
-//        }
-//    }
-//    ~BezierSurfaceBatch() {
-//        for(int i=0; i<PSIZE; i++) {
-//            delete cListu[i];
-//        }
-//
-//        for(int i=0; i<nCurve; i++) {
-//            delete cListv[i];
-//        }
-//        if(cListv)
-//            delete cListv;
-//        cListv = NULL;
+//GLfloat myarr[4][4][3] = {
+//    {
+//        {0.409091,0.772727,0.0},
+//        {0.409091,0.772727,-0.229091},
+//        {0.229091,0.772727,-0.409091},
+//        {0.0,0.772727,-0.409091}
+//    },
+//    {
+//        {0.409091,0.886364,0.0},
+//        {0.409091,0.886364,-0.229091},
+//        {0.229091,0.886364,-0.409091},
+//        {0.0,0.886364,-0.409091}
+//    },
+//    {
+//        {0.454545,0.886364,0.0},
+//        {0.454545,0.886364,-0.254545},
+//        {0.254545,0.886364,-0.454545},
+//        {0.0,0.886364,-0.454545}
+//    },
+//    {
+//        {0.454545,0.772727,0.0},
+//        {0.454545,0.772727,-0.254545},
+//        {0.254545,0.772727,-0.454545},
+//        {0.0,0.772727,-0.454545}
 //    }
 //};
 //
+
 BezierSurfaceBatch bezier(myarr);
+//bezier.create();
+//bezier.draw();
 
 void initCurve() {
     for(int i=0; i<4; i++) {
@@ -261,14 +239,6 @@ void initCurve() {
 void init() {
     bezier.create();
     glEnable(GL_DEPTH_TEST);
-//    glLightfv(GL_LIGHT0, GL_DIFFUSE, RED);
-//    glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
-//    glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);
-//    glMaterialf(GL_FRONT, GL_SHININESS, 30);
-//    glEnable(GL_LIGHTING);
-//    glEnable(GL_LIGHT0);
-//    checker_board.setColor(GREEN, WHITE);
-//    checker_board.create();
 }
 
 // Draws one frame, the CheckerBoard then the balls, from the current camera
@@ -279,14 +249,7 @@ void display() {
     gluLookAt(camera.getX(), camera.getY(), camera.getZ(),
               0.0, 0.0, 0.0,
               0.0, 1.0, 0.0);
-    //checker_board.draw();
-    //curve->draw();
-    //curve4->draw();
-//    torus2.draw();
-//    draw_quad.draw();
-//    co.draw();
 
-//    initCurve();
     bezier.draw();
     glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
 
@@ -324,6 +287,12 @@ void special(int key, int, int) {
         break;
     case GLUT_KEY_DOWN:
         camera.moveDown();
+        break;
+    case 'o':
+        camera.zoomIn();
+        break;
+    case 'O':
+        camera.zoomOut();
         break;
     }
     glutPostRedisplay();
