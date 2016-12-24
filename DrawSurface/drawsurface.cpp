@@ -21,6 +21,7 @@
 #include "Color.h"
 #include "Const.h"
 #include "BezierSurfaceBatch.h"
+#include "ReadTeapot.h"
 
 // A camera.  It moves horizontally in a circle centered at the origin of
 // radius 10.  It moves vertically straight up and down.
@@ -155,8 +156,11 @@ GLfloat myarr[4][4][3] = {
 //
 
 BezierSurfaceBatch bezier(myarr);
-//bezier.create();
-//bezier.draw();
+
+BezierSurfaceBatch* bez[26]; 
+
+float arrf[26][4][4][3];
+ReadTeapot readTeapot("teacup", arrf);
 
 void initCurve() {
     for(int i=0; i<4; i++) {
@@ -237,7 +241,12 @@ void initCurve() {
 // Application-specific initialization: Set up global lighting parameters
 // and create display lists.
 void init() {
-    bezier.create();
+    
+    for(int i=0; i<26; i++){
+        bez[i] = new BezierSurfaceBatch(arrf[i]);
+        bez[i]->create();
+    } 
+
     glEnable(GL_DEPTH_TEST);
 }
 
@@ -250,7 +259,10 @@ void display() {
               0.0, 0.0, 0.0,
               0.0, 1.0, 0.0);
 
-    bezier.draw();
+    for(int i=0; i<26; i++){
+        bez[i]->draw();
+    } 
+
     glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
 
     glFlush();
