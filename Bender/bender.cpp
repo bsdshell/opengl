@@ -107,7 +107,7 @@ display(void) {
     /* Rotate text slightly to help show jaggies. */
     glRotatef(0.0, 0.0, 0.0, 1.0);
     glScalef(0.5,0.5,1);
-    printContext(tx, ty, angle1, angle2);
+    printFormat(tx, ty, angle1, angle2);
 //    if(ty < 400)
 //        ty += 4.0;
 //    else
