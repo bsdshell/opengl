@@ -22,52 +22,11 @@
 #include "Const.h"
 #include "BezierSurfaceBatch.h"
 #include "ReadTeapot.h"
-
-// A camera.  It moves horizontally in a circle centered at the origin of
-// radius 10.  It moves vertically straight up and down.
-class Camera {
-    double theta;      // determines the x and z positions
-    double y;          // the current y position
-    double dTheta;     // increment in theta for swinging the camera around
-    double dy;         // increment in y for moving the camera up/down
-    double r;
-public:
-    Camera(): theta(-1.2), y(3), dTheta(0.04), dy(0.2), r(6){}
-    double getX() {
-        return r * cos(theta);
-    }
-    double getY() {
-        return y;
-    }
-    double getZ() {
-        return r * sin(theta);
-    }
-    void moveRight() {
-        theta += dTheta;
-    }
-    void moveLeft() {
-        theta -= dTheta;
-    }
-    void moveUp() {
-        y += dy;
-    }
-    void moveDown() {
-        //if (y > dy) y -= dy;
-        y -= dy;
-    }
-    void zoomIn() {
-        //if (y > dy) y -= dy;
-        r += -0.2;
-    }
-    void zoomOut() {
-        //if (y > dy) y -= dy;
-        r += 0.2;
-    }
-};
+#include "cameraKeyBoard.h"
 
 // Global variables: a camera, a CheckerBoard and some balls.
 CheckerBoard checker_board(9, 9);
-Camera camera;
+//Camera camera;
 
 DDLinkedList<Vector3>* ddl_arr[4];
 Curve* curveListu[4];
@@ -241,7 +200,6 @@ void initCurve() {
 // Application-specific initialization: Set up global lighting parameters
 // and create display lists.
 void init() {
-    
     for(int i=0; i<26; i++){
         bez[i] = new BezierSurfaceBatch(arrf[i]);
         bez[i]->create();
@@ -284,31 +242,6 @@ void timer(int v) {
     glutTimerFunc(1000/60, timer, v);
 }
 
-// Moves the camera according to the key pressed, then ask to refresh the
-// display.
-void special(int key, int, int) {
-    switch (key) {
-    case GLUT_KEY_LEFT:
-        camera.moveLeft();
-        break;
-    case GLUT_KEY_RIGHT:
-        camera.moveRight();
-        break;
-    case GLUT_KEY_UP:
-        camera.moveUp();
-        break;
-    case GLUT_KEY_DOWN:
-        camera.moveDown();
-        break;
-    case 'o':
-        camera.zoomIn();
-        break;
-    case 'O':
-        camera.zoomOut();
-        break;
-    }
-    glutPostRedisplay();
-}
 
 // Initializes GLUT and enters the main loop.
 int main(int argc, char** argv) {
@@ -320,7 +253,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Bouncing Balls");
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
-    glutSpecialFunc(special);
+    glutSpecialFunc(keyboard);
     glutTimerFunc(100, timer, 0);
     init();
     glutMainLoop();

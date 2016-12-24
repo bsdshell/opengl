@@ -12,6 +12,8 @@
 
 #include "BezierCurve.h"
 #include "Utility.h"
+#include "Camera.h"
+#include "CameraKeyBoard.h"
 
 DDLinkedList<Vector3>* ddl_u = new DDLinkedList<Vector3>();
 DDLinkedList<Vector3>* ddl_v = new DDLinkedList<Vector3>();
@@ -31,37 +33,6 @@ GLfloat RED[] = {1, 0, 0};
 GLfloat GREEN[] = {0, 1, 0};
 GLfloat MAGENTA[] = {1, 0, 1};
 
-// A camera.  It moves horizontally in a circle centered at the origin of
-// radius 10.  It moves vertically straight up and down.
-class Camera {
-    double theta;      // determines the x and z positions
-    double y;          // the current y position
-    double dTheta;     // increment in theta for swinging the camera around
-    double dy;         // increment in y for moving the camera up/down
-public:
-    Camera(): theta(-1.2), y(3), dTheta(0.04), dy(0.2) {}
-    double getX() {
-        return 10 * cos(theta);
-    }
-    double getY() {
-        return y;
-    }
-    double getZ() {
-        return 10 * sin(theta);
-    }
-    void moveRight() {
-        theta += dTheta;
-    }
-    void moveLeft() {
-        theta -= dTheta;
-    }
-    void moveUp() {
-        y += dy;
-    }
-    void moveDown() {
-        if (y > dy) y -= dy;
-    }
-};
 
 // A ball.  A ball has a radius, a color, and bounces up and down between
 // a maximum height and the xz plane.  Therefore its x and z coordinates
@@ -141,7 +112,7 @@ public:
 
 // Global variables: a camera, a checkerboard and some balls.
 Checkerboard checkerboard(8, 8);
-Camera camera;
+//Camera camera;
 Ball balls[] = {
     Ball(1, GREEN, 7, 6, 1),
     Ball(1.5, MAGENTA, 6, 3, 4),
@@ -371,26 +342,28 @@ void timer(int v) {
     glutTimerFunc(1000/60, timer, v);
 }
 
-// Moves the camera according to the key pressed, then ask to refresh the
-// display.
-void special(int key, int, int) {
-    switch (key) {
-    case GLUT_KEY_LEFT:
-        camera.moveLeft();
-        break;
-    case GLUT_KEY_RIGHT:
-        camera.moveRight();
-        break;
-    case GLUT_KEY_UP:
-        camera.moveUp();
-        break;
-    case GLUT_KEY_DOWN:
-        camera.moveDown();
-        break;
-    }
-    glutPostRedisplay();
-}
 
+
+//// Moves the camera according to the key pressed, then ask to refresh the
+//// display.
+//void keyboard(int key, int, int) {
+//    switch (key) {
+//    case GLUT_KEY_LEFT:
+//        camera.moveLeft();
+//        break;
+//    case GLUT_KEY_RIGHT:
+//        camera.moveRight();
+//        break;
+//    case GLUT_KEY_UP:
+//        camera.moveUp();
+//        break;
+//    case GLUT_KEY_DOWN:
+//        camera.moveDown();
+//        break;
+//    }
+//    glutPostRedisplay();
+//}
+//
 // Initializes GLUT and enters the main loop.
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
@@ -403,7 +376,8 @@ int main(int argc, char** argv) {
     //get_curve_vertex_4();
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
-    glutSpecialFunc(special);
+//    glutSpecialFunc(keyboard);
+    glutSpecialFunc(keyboard);
     glutTimerFunc(100, timer, 0);
     init();
     glutMainLoop();
