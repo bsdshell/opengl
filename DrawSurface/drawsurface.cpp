@@ -188,7 +188,7 @@ void initCurve() {
     while(count < curveListv[0]->ddl->count()) {
         glBegin(GL_LINE_STRIP); //starts drawing of points
         for(int i=0; i<21; i++) {
-            glColor3f(1.0, 1.0, 1.0);
+            glColor3f(1.0, 0.0, 1.0);
             glVertex3f(currArr[i]->data.v[0], currArr[i]->data.v[1], currArr[i]->data.v[2]);
             currArr[i] = currArr[i]->next;
         }
@@ -245,7 +245,6 @@ void timer(int v) {
 
 // Initializes GLUT and enters the main loop.
 int main(int argc, char** argv) {
-
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(80, 80);
