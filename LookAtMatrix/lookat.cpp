@@ -12,11 +12,6 @@
 
 #include "BezierCurve.h"
 #include "Curve.h"
-#include "Torus.h"
-#include "Circle.h"
-#include "Cylinder.h"
-#include "DrawQuad.h"
-#include "Coordinate.h"
 #include "Color.h" 
 #include "Parabola.h" 
 #include "CameraKeyBoard.h" 

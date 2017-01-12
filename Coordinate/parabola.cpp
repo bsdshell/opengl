@@ -28,13 +28,6 @@ using namespace Utility;
 Parabola para;
 Cube cube;
 
-void draw_test(){
-    glBegin(GL_LINE_LOOP); //starts drawing of points
-        glVertex3f(1.0f, 1.0f, 0.0f);
-        glVertex3f(0.0f, 0.0f, 0.0f);
-        glVertex3f(1.0f, -1.0f, 0.0f);
-    glEnd();
-}
 
 // Application-specific initialization: Set up global lighting parameters
 // and create display lists.
@@ -49,6 +42,58 @@ void init() {
 }
 
 
+void drawCoordinate(void){
+    glBegin(GL_LINES); 
+
+      float delta = 0.1f;
+      glColor3f(0.0f,1.0f,0.0f); 
+      for(int i=-10; i<=10; i++){
+          glVertex3f(-1.0f, 0.0f, delta*i);
+          glVertex3f(1.0f, 0.0f,  delta*i);
+      }
+
+      glColor3f(0.3f,0.7f,0.0f); 
+      for(int i=-10; i<=10; i++){
+          glVertex3f(-1.0f, delta*i,  0.0f);
+          glVertex3f(1.0f,  delta*i,  0.0f);
+      }
+
+      glColor3f(1.0f, 0.0f,0.0f);
+      for(int i=-10; i<=10; i++){
+          glVertex3f(0.0f, -1.0f, delta*i);
+          glVertex3f(0.0f, 1.0f,  delta*i);
+      }
+
+      glColor3f(0.4f, 0.4f,0.1f);
+      for(int i=-10; i<=10; i++){
+          glVertex3f(delta*i, -1.0f, 0.0f);
+          glVertex3f(delta*i, 1.0f,  0.0f);
+      }
+
+      glColor3f(0.0f, 0.0f, 1.0f); 
+      for(int i=-10; i<=10; i++){
+          glVertex3f(delta*i, 0.0f, -1.0f);
+          glVertex3f(delta*i, 0.0f, 1.0f);
+      }
+
+      glColor3f(0.0f, 0.5f, 0.5f); 
+      for(int i=-10; i<=10; i++){
+          glVertex3f(0.0f, delta*i, -1.0f);
+          glVertex3f(0.0f, delta*i, 1.0f);
+      }
+    glEnd();
+}
+
+
+void draw_test(){
+    glBegin(GL_LINE_LOOP); //starts drawing of points
+        glVertex3f(1.0f, 1.0f, 0.0f);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(1.0f, -1.0f, 0.0f);
+    glEnd();
+    drawCoordinate();
+}
+
 float matrix[16];
 
 // Draws one frame, the CheckerBoard then the balls, from the current camera
@@ -56,16 +101,16 @@ float matrix[16];
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-//    gluLookAt(camera.getX(), camera.getY(), camera.getZ(),
-//              0.0, 0.0, 0.0,
-//              0.0, 1.0, 0.0);
+    gluLookAt(camera.getX(), camera.getY(), camera.getZ(),
+              0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0);
 
     // forward = (0, 0, 0) - (0, 2, 3) = eye -> center
 
     //getModelViewMatrix(matrix);
-    gluLookAt(0, 2, 3,
-              0.0, 0.0, 0.0,
-              0.0, 1, 0);
+//    gluLookAt(-1, 2, 3,
+//              0.0, 0.0, 0.0,
+//              0.0, 1, 0);
 
 //> 9 / (sqrt 117)
 //0.8320502943378436
@@ -76,8 +121,6 @@ void display() {
 //[0.000000][0.832050][-0.554700][0.000000]
 //[0.000000][0.554700][0.832050][-3.605551]
 //[0.000000][0.000000][0.000000][1.000000]
-
-
 
     getModelViewMatrix(matrix);
 

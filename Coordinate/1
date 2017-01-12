@@ -62,10 +62,10 @@ void display() {
 
     // forward = (0, 0, 0) - (0, 2, 3) = eye -> center
 
-    //getModelViewMatrix(matrix);
+    getModelViewMatrix(matrix);
     gluLookAt(0, 2, 3,
               0.0, 0.0, 0.0,
-              0.0, 1, 0);
+              0.0, 1.0, 0.0);
 
 //> 9 / (sqrt 117)
 //0.8320502943378436
@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
     glutInitWindowSize(800, 600);
     glutCreateWindow("Bouncing Balls");
     glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
+    //glutReshapeFunc(reshape);
     glutSpecialFunc(keyboard);
     glutTimerFunc(100, timer, 0);
     //init();

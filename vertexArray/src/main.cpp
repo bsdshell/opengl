@@ -794,14 +794,6 @@ void toPerspective()
     glLoadIdentity();
 }
 
-
-
-
-
-
-
-
-
 //=============================================================================
 // CALLBACKS
 //=============================================================================
@@ -821,7 +813,7 @@ void displayCB()
 
     draw1();        // with immediate mode, glBegin()-glEnd() block
     draw2();        // with glDrawArrays()
-    //draw3();        // with glDrawElements()
+    draw3();        // with glDrawElements()
     draw5();        // with glDrawElements() with interleave vertex array
     draw4();        // with glDrawRangeElements()
 

@@ -49,10 +49,8 @@ display(void) {
     glTranslated(10.0, 10.0, 0.0);
 
     glEnableClientState(GL_VERTEX_ARRAY);
-
     glVertexPointer(3, GL_FLOAT, 0, vertices);
     glDrawArrays(GL_TRIANGLES, 0, 3);
-
     glDisableClientState(GL_VERTEX_ARRAY);
 
     glPopMatrix();

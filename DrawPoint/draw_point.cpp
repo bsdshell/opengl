@@ -21,12 +21,46 @@ void drawPoint(void){
     glPointSize(10.0f);
 
     glBegin(GL_POINTS); //starts drawing of points
-      glVertex3f(0.5f,0.5f,0.0f);
-      glVertex3f(0.0f,0.0f,0.0f);
+      //glVertex3f(0.5f,0.5f,-1.0f);
+      glVertex3f(0.0f,0.0f,-1.0f);
     glEnd();
 
     glLoadIdentity();
     glutSwapBuffers();
+}
+
+void drawCoordinate(void){
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(0.5f,0.5f,1.0f); // point color
+    glBegin(GL_LINE); 
+      //glVertex3f(0.5f,0.5f,-1.0f);
+      glVertex3f(-1.0f, 0.0f, -1.0f);
+      glVertex3f(1.0f, 0.0f, -1.0f);
+      glVertex3f(0.0f, 0.0f, -1.0f);
+      glVertex3f(1.0f, 0.0f, -1.0f);
+    glEnd();
+
+    glLoadIdentity();
+    glutSwapBuffers();
+}
+
+void display(void){
+    //drawPoint();
+    drawCoordinate();
+}
+
+void reshape(GLint w, GLint h) {
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(40.0, GLfloat(w) / GLfloat(h), 1.0, 150.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+
+void timer(int v) {
+    glutPostRedisplay();
+    glutTimerFunc(1000/60, timer, v);
 }
 
 int main(int argc, char** argv) {
@@ -35,7 +69,9 @@ int main(int argc, char** argv) {
     glutInitWindowSize (300,300);
     glutInitWindowPosition (100, 100);
     glutCreateWindow ("Draw GL_POINTS");
-    glutDisplayFunc(drawPoint);
+    glutDisplayFunc(display);
+//    glutReshapeFunc(reshape);
+    glutTimerFunc(100, timer, 0);
     glutMainLoop();
 
     return 0;

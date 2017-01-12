@@ -1,4 +1,3 @@
 #!/bin/bash
-#g++ -o CubeSimple CubeSimple.cpp -I /opt/X11/include/GL/glext.h -framework GLUT -framework OpenGL -framework Cocoa
 
-g++ -o CubeSimple CubeSimple.cpp -framework GLUT -framework OpenGL
+g++ -Wno-deprecated -std=c++11 -g -v -o CubeSimple CubeSimple.cpp -I/Users/cat/myfile/github/cpp/MyLib -framework GLUT -framework OpenGL 

@@ -30,7 +30,6 @@ void drawTriangle(void){
       glVertex3f(0.0f,0.0f,0.0f);
     glEnd();
 
-    glLoadIdentity();
     glutSwapBuffers();
 }
 

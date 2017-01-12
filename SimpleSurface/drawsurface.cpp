@@ -22,7 +22,7 @@
 #include "Const.h"
 #include "BezierSurfaceBatch.h"
 #include "ReadTeapot.h"
-#include "cameraKeyBoard.h"
+#include "CameraKeyBoard.h"
 
 // Global variables: a camera, a CheckerBoard and some balls.
 CheckerBoard checker_board(9, 9);
@@ -33,88 +33,10 @@ Curve* curveListu[4];
 Curve* curveListv[50];
 Node<Vector3>* currArr[500];
 
-Vector3 p0(-1, 0, 0);
-Vector3 p1(0, 1, 0);
-Vector3 p2(1, 0, 0);
-Curve* curve = new Curve(p0, p1, p2);
-
-Vector3 p00(-1, 0, 0);
-Vector3 p11(0, 1, 0);
-Vector3 p22(1, 1, 0);
-Vector3 p33(2, 0, 0);
-
-Curve* curve4 = new Curve(p00, p11, p22, p33);
 GLfloat curveColor0[3] = {1.0, 0.0, 0.0};
 GLfloat curveColor1[3] = {0.0, 1.0, 0.0};
 GLfloat curveColor2[3] = {0.0, 0.0, 1.0};
 GLfloat curveColor3[3] = {1.0, 1.0, 0.0};
-
-Torus torus(1, 1, 1, 8, 25);
-Torus torus2(20, 40);
-Circle circle(1, 1, 1, 20);
-Cylinder cylinder(1, 1, 0.2, 20);
-DrawQuad draw_quad;
-Coordinate co(8);
-
-GLfloat xx = 1.0;
-GLfloat yy = 1.0;
-GLfloat zz = 1.0;
-GLfloat myarr[4][4][3] = {
-    {
-        {0.0, 0.0, 0.0f},
-        {1.0, 1.0, 0.0f},
-        {2.0, 1.0, 0.0f},
-        {3.0, 0.0, 0.0f}
-    },
-    {
-        {0.0, 0.0, 0.0f + xx},
-        {1.0, 5.0, 0.0f + xx},
-        {2.0, 5.0, 0.0f + xx},
-        {3.0, 0.0, 0.0f + xx}
-    },
-    {
-        {0.0, 0.0, 0.0f + 2*xx},
-        {1.0, -3.0, 0.0f + 2*xx},
-        {2.0, -2.0, 0.0f + 2*xx},
-        {3.0, 0.0, 0.0f + 2*xx}
-    },
-    {
-        {0.0, 0.0, 0.0f + 3*xx},
-        {1.0, 1.0, 0.0f + 3*xx},
-        {2.0, 1.0, 0.0f + 3*xx},
-        {3.0, 0.0, 0.0f + 3*xx}
-    }
-};
-
-//GLfloat myarr[4][4][3] = {
-//    {
-//        {0.409091,0.772727,0.0},
-//        {0.409091,0.772727,-0.229091},
-//        {0.229091,0.772727,-0.409091},
-//        {0.0,0.772727,-0.409091}
-//    },
-//    {
-//        {0.409091,0.886364,0.0},
-//        {0.409091,0.886364,-0.229091},
-//        {0.229091,0.886364,-0.409091},
-//        {0.0,0.886364,-0.409091}
-//    },
-//    {
-//        {0.454545,0.886364,0.0},
-//        {0.454545,0.886364,-0.254545},
-//        {0.254545,0.886364,-0.454545},
-//        {0.0,0.886364,-0.454545}
-//    },
-//    {
-//        {0.454545,0.772727,0.0},
-//        {0.454545,0.772727,-0.254545},
-//        {0.254545,0.772727,-0.454545},
-//        {0.0,0.772727,-0.454545}
-//    }
-//};
-//
-
-BezierSurfaceBatch bezier(myarr);
 
 BezierSurfaceBatch* bez[26]; 
 
@@ -200,17 +122,7 @@ void initCurve() {
 // Application-specific initialization: Set up global lighting parameters
 // and create display lists.
 void init() {
-//    for(int i=0; i<26; i++){
-//        bez[i] = new BezierSurfaceBatch(arrf[i]);
-//        bez[i]->create();
-//    } 
-
     glEnable(GL_DEPTH_TEST);
-}
-void draw_surface(){
-    for(int i=0; i<26; i++){
-        bez[i]->draw();
-    } 
 }
 
 // Draws one frame, the CheckerBoard then the balls, from the current camera
@@ -223,7 +135,6 @@ void display() {
               0.0, 1.0, 0.0);
 
     initCurve();
-//    draw_surface();
     glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
 
     glFlush();
@@ -244,7 +155,6 @@ void timer(int v) {
     glutPostRedisplay();
     glutTimerFunc(1000/60, timer, v);
 }
-
 
 // Initializes GLUT and enters the main loop.
 int main(int argc, char** argv) {
