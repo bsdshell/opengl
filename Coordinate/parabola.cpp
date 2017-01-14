@@ -11,7 +11,6 @@
 #include <cmath>
 
 #include "BezierCurve.h"
-#include "Curve.h"
 #include "Torus.h"
 #include "Circle.h"
 #include "Cylinder.h"
@@ -20,14 +19,14 @@
 #include "Color.h" 
 #include "Parabola.h" 
 #include "CameraKeyBoard.h" 
-#include "Cube.h" 
 #include "AronLib.h" 
 
 using namespace Utility;
+using namespace SpaceDraw;
 
 Parabola para;
-Cube cube;
-
+SimpleCoordinate coor;
+Cylinder cylinder(0, 0, 2);
 
 // Application-specific initialization: Set up global lighting parameters
 // and create display lists.
@@ -42,56 +41,60 @@ void init() {
 }
 
 
-void drawCoordinate(void){
-    glBegin(GL_LINES); 
-
-      float delta = 0.1f;
-      glColor3f(0.0f,1.0f,0.0f); 
-      for(int i=-10; i<=10; i++){
-          glVertex3f(-1.0f, 0.0f, delta*i);
-          glVertex3f(1.0f, 0.0f,  delta*i);
-      }
-
-      glColor3f(0.3f,0.7f,0.0f); 
-      for(int i=-10; i<=10; i++){
-          glVertex3f(-1.0f, delta*i,  0.0f);
-          glVertex3f(1.0f,  delta*i,  0.0f);
-      }
-
-      glColor3f(1.0f, 0.0f,0.0f);
-      for(int i=-10; i<=10; i++){
-          glVertex3f(0.0f, -1.0f, delta*i);
-          glVertex3f(0.0f, 1.0f,  delta*i);
-      }
-
-      glColor3f(0.4f, 0.4f,0.1f);
-      for(int i=-10; i<=10; i++){
-          glVertex3f(delta*i, -1.0f, 0.0f);
-          glVertex3f(delta*i, 1.0f,  0.0f);
-      }
-
-      glColor3f(0.0f, 0.0f, 1.0f); 
-      for(int i=-10; i<=10; i++){
-          glVertex3f(delta*i, 0.0f, -1.0f);
-          glVertex3f(delta*i, 0.0f, 1.0f);
-      }
-
-      glColor3f(0.0f, 0.5f, 0.5f); 
-      for(int i=-10; i<=10; i++){
-          glVertex3f(0.0f, delta*i, -1.0f);
-          glVertex3f(0.0f, delta*i, 1.0f);
-      }
-    glEnd();
-}
-
+//void drawCoordinate(float width = 1.0, int num=10){
+//    glBegin(GL_LINES); 
+//      float delta = width/num;
+//      glColor3f(0.0f, width, 0.0f); 
+//      for(int i=-num; i<=num; i++){
+//          glVertex3f(-width, 0.0f, delta*i);
+//          glVertex3f(width, 0.0f,  delta*i);
+//      }
+//
+//      glColor3f(0.3f,0.7f,0.0f); 
+//      for(int i=-num; i<=num; i++){
+//          glVertex3f(-width, delta*i,  0.0f);
+//          glVertex3f(width,  delta*i,  0.0f);
+//      }
+//
+//      glColor3f(width, 0.0f,0.0f);
+//      for(int i=-num; i<=num; i++){
+//          glVertex3f(0.0f, -width, delta*i);
+//          glVertex3f(0.0f, width,  delta*i);
+//      }
+//
+//      glColor3f(0.4f, 0.4f,0.1f);
+//      for(int i=-num; i<=num; i++){
+//          glVertex3f(delta*i, -width, 0.0f);
+//          glVertex3f(delta*i, width,  0.0f);
+//      }
+//
+//      glColor3f(0.0f, 0.0f, width); 
+//      for(int i=-num; i<=num; i++){
+//          glVertex3f(delta*i, 0.0f, -width);
+//          glVertex3f(delta*i, 0.0f, width);
+//      }
+//
+//      glColor3f(0.0f, 0.5f, 0.5f); 
+//      for(int i=-num; i<=num; i++){
+//          glVertex3f(0.0f, delta*i, -width);
+//          glVertex3f(0.0f, delta*i, width);
+//      }
+//    glEnd();
+//}
+//
 
 void draw_test(){
-    glBegin(GL_LINE_LOOP); //starts drawing of points
-        glVertex3f(1.0f, 1.0f, 0.0f);
-        glVertex3f(0.0f, 0.0f, 0.0f);
-        glVertex3f(1.0f, -1.0f, 0.0f);
-    glEnd();
-    drawCoordinate();
+//    glBegin(GL_LINE_LOOP); //starts drawing of points
+//        glVertex3f(1.0f, 1.0f, 0.0f);
+//        glVertex3f(0.0f, 0.0f, 0.0f);
+//        glVertex3f(1.0f, -1.0f, 0.0f);
+//    glEnd();
+//    drawCoordinate(2.0);
+    coor.draw();
+    char buffer[50];
+    sprintf(buffer, "[%f][%f][%f]", camera.getX(), camera.getY(), camera.getZ());
+    printFormatNew(50, 50, buffer);
+    cylinder.draw();
 }
 
 float matrix[16];
@@ -99,35 +102,17 @@ float matrix[16];
 // Draws one frame, the CheckerBoard then the balls, from the current camera
 // position.
 void display() {
+    glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     gluLookAt(camera.getX(), camera.getY(), camera.getZ(),
               0.0, 0.0, 0.0,
               0.0, 1.0, 0.0);
-
-    // forward = (0, 0, 0) - (0, 2, 3) = eye -> center
-
-    //getModelViewMatrix(matrix);
-//    gluLookAt(-1, 2, 3,
-//              0.0, 0.0, 0.0,
-//              0.0, 1, 0);
-
-//> 9 / (sqrt 117)
-//0.8320502943378436
-//> -2 / (sqrt 13)
-//-0.5547001962252291
-//> 
-//[1.000000][0.000000][0.000000][0.000000]
-//[0.000000][0.832050][-0.554700][0.000000]
-//[0.000000][0.554700][0.832050][-3.605551]
-//[0.000000][0.000000][0.000000][1.000000]
-
+    
     getModelViewMatrix(matrix);
 
     draw_test();
 
-//    glMatrixMode(GL_PROJECTION);
-    //para.draw();
     glFlush();
     glutSwapBuffers();
 }
@@ -153,12 +138,11 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(80, 80);
     glutInitWindowSize(800, 600);
-    glutCreateWindow("Bouncing Balls");
+    glutCreateWindow("Lighting example");
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutSpecialFunc(keyboard);
     glutTimerFunc(100, timer, 0);
-    //init();
 
     glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 

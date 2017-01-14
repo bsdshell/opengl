@@ -22,7 +22,7 @@
 #include "Const.h"
 #include "BezierSurfaceBatch.h"
 #include "ReadTeapot.h"
-#include "cameraKeyBoard.h"
+#include "CameraKeyBoard.h" 
 
 // Global variables: a camera, a CheckerBoard and some balls.
 CheckerBoard checker_board(9, 9);
@@ -225,6 +225,10 @@ void display() {
     initCurve();
 //    draw_surface();
     glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+    char buffer[50];
+    sprintf(buffer, "[%f][%f][%f]", camera.getX(), camera.getY(), camera.getZ());
+    printFormatNew(100, 200, buffer); 
 
     glFlush();
     glutSwapBuffers();
