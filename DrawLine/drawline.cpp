@@ -60,7 +60,8 @@ void draw(void){
         else
             glColor3f(0.0f,1.0f,0.0f); // point color
 
-        glBegin(GL_QUAD_STRIP); //starts drawing of points
+        
+        glBegin(GL_LINE_LOOP); //starts drawing of points
         for(int i=0; i<len; i++){
             x = r*sin(delta*i);
             y = (dr*j)*(dr*j);

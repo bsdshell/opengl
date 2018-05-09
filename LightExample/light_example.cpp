@@ -13,9 +13,26 @@ using namespace Utility;
 Cube cube(0, 0, 0, 0.5);
 
 static void init(void) {
-    glShadeModel(GL_FLAT);
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
+void drawBox(){
+    float alpha = 0.5;
+    glBegin(GL_QUADS);
+    glColor4f(1.0, 0.0, 0.0, alpha);
+    glVertex3f(-1.0, +1.0, 0.0); // top left
+
+    glColor4f(0.0, 1.0, 0.0, alpha);
+    glVertex3f(-1.0, -1.0, 0.0); // bottom left
+
+    glColor4f(0.0, 0.0, 1.0, alpha);
+    glVertex3f(+1.0, -1.0, 0.0); // bottom right
+
+    glColor4f(0.0, 1.0, 1.0, alpha);
+    glVertex3f(+1.0, +1.0, 0.0); // top right
+    glEnd();
+}
+
 
 void drawPolygon(){
 
@@ -48,7 +65,8 @@ void display(void) {
               0.0, 0.0, 0.0,
               0.0, 1.0, 0.0);
     
-    drawPolygon();
+    //drawPolygon();
+    drawBox();
     glFlush();
 }
 

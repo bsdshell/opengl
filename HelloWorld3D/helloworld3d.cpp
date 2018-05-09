@@ -10,7 +10,36 @@
 using namespace SpaceDraw;
 using namespace Utility;
 using namespace SpaceDraw;
-using namespace SpaceComplex;
+
+//class Plane{
+//    public:
+//    float x;
+//    float y;
+//    Plane(int x_ = 1.0f, int y_ = 1.0f){
+//        x = x_;
+//        y = y_;
+//    }
+//    // draw x-y plane
+//    void draw(){
+//        float alpha = 0.5;
+//        glBegin(GL_QUADS);
+//        glColor4f(x, 0.0, 0.0, alpha);
+//        glVertex3f(-x, +y, 0.0); // top left
+//
+//        glColor4f(0.0, y, 0.0, alpha);
+//        glVertex3f(-x, -y, 0.0); // bottom left
+//
+//        glColor4f(0.0, 0.0, 1.0, alpha);
+//        glVertex3f(+x, -y, 0.0); // bottom right
+//
+//        glColor4f(0.0, y, 1.0, alpha);
+//        glVertex3f(+x, +y, 0.0); // top right
+//        glEnd();
+//        camera.print(10, 100);
+//    }
+//};
+//
+
 
 Cube cube(0, 0, 0, 0.5);
 SimpleCoordinate coor;
@@ -19,8 +48,7 @@ Plane plane;
 static void init(void) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    camera.setTheta((double)M_PI/2);
-    camera.setAlpha(0.0);
+    camera.setTheta(0.5);
 }
 
 void drawBox(){
@@ -42,25 +70,6 @@ void drawBox(){
 }
 
 
-double initX = -1;
-double initY = -1;
-
-double initX1 = -1;
-double initY1 = -1;
-
-Circle circle(initX, initY, 0.05, 10);
-Circle circle1(initX1, initY1, 0.03, 20);
-double delta = initX;
-double alpha1 = initX1;
-double off = 0.0;
-
-double parabola(double x, double off){
-    return -(x - off + 1)*(x - off + 1) + 1;
-}
-
-double parabola(double x){
-    return -x*x + 1.2;
-}
 void display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
@@ -71,31 +80,8 @@ void display(void) {
 //    drawBox();
     plane.draw();
     coor.draw();
-
-    double x = delta;
-    double y = parabola(x, off);
-    circle.move(x, y, 0);
-    circle.draw();
-
-    circle1.move(alpha1, parabola(alpha1), 0);
-    circle1.draw();
-    alpha1 += 0.009;
-
-    cerr<<"x="<<x<<endl;
-    cerr<<"y="<<y<<endl;
-    delta += 0.01;
-    if(delta >= 1.0){
-        off = 2.0;
-    }
-
     camera.print(10, 100);
     glFlush();
-}
-
-
-void delayFrame(int millisec) {
-    glutTimerFunc(millisec, delayFrame, millisec);
-    glutPostRedisplay();
 }
 
 void reshape(GLint w, GLint h) {
@@ -107,7 +93,6 @@ void reshape(GLint w, GLint h) {
 }
 
 int main(int argc, char **argv) {
-    int millisec = 20;
     glutInitWindowSize(800, 800);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
@@ -116,10 +101,6 @@ int main(int argc, char **argv) {
     glutReshapeFunc(reshape);
     glutSpecialFunc(keyboard);
     glutDisplayFunc(display);
-
-    // delay n millisecond, sleep, slow frame, delay frame
-    glutTimerFunc(millisec, delayFrame, millisec);             // redraw only every given millisec
-
     glutMainLoop();
     return 0;
 }
